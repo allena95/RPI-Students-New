@@ -1,0 +1,60 @@
+%% DATUM RPI Students - Predict leaving Spring 2015
+clear;
+close all;
+%%
+[num,txt,raw] = xlsread('NoCoursesWithGPA.xlsx');
+
+data = [num(:,2:44) num(:,47:49) num(:,51:end)];
+
+first_gpa = data(:,44);
+%%
+good = nan(size(data));
+poor = nan(size(data));
+[m,n] = size(data);
+mid = nan(size(data));
+for i = 1:m;
+    if first_gpa(i) >= 3.0;
+        good(i,:) = data(i,:);
+    end
+    if first_gpa(i) <= 2.5;
+        poor(i,:) = data(i,:);
+    end
+    if and(first_gpa(i) < 3, first_gpa(i)>2.5);
+        mid(i,:) = data(i,:);
+    end
+end
+
+good = good(~any(isnan(good),2),:); %remove students with missing data
+poor = poor(~any(isnan(poor),2),:); %remove students with missing data
+mid = mid(~any(isnan(mid),2),:);
+%%
+
+figure
+imagesc(corr(good))
+title('Good Students')
+colorbar
+
+figure
+imagesc(corr(poor))
+title('Poor Performers')
+colorbar
+
+%%
+
+figure
+imagesc(mean(good(:,1:35)))
+%colormap('gray')
+title('good')
+colorbar
+
+figure
+imagesc(mean(mid(:,1:35)))
+%colormap('gray')
+title('mid')
+colorbar
+
+figure
+imagesc(mean(poor(:,1:35)))
+%colormap('gray')
+title('poor')
+colorbar
