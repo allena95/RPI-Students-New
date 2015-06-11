@@ -156,16 +156,12 @@ Bottom = GPAAna(size(GPAAna)-253:end,:);
 
 
 
-% GPA boxplot
+% D = corr(Top, Bottom);
 figure
 subplot(1,2,1)
 boxplot(Top(:,[35:37,40,41]))
-title('All GPA for top 25%')
 % % imagesc(Top(:,[2:32,34:end]))
 % 
 subplot(1,2,2)
 boxplot(Bottom(:,[35:37,40,41]))
-title('All GPA for bottom 25%')
 % imagesc(Bottom(:,[2:32,34:end]))
-
-
