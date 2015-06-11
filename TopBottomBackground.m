@@ -201,44 +201,44 @@ SOC = [SOCTop;SOCBottom];
 
 figure
 subplot(3,3,1)
-Genderb = bar(Gender)
+Genderb = bar(Gender);
 title('Gender')
 legend('Girls','Boys')
 ylabel('Percentage')
 set(gca,'XTickLabel',{'Top 25%','Bottom 25%'})
 
 subplot(3,3,2)
-Citizenb = bar(Citizenship)
+Citizenb = bar(Citizenship);
 title('Citizenship')
 ylabel('Percentage')
 set(gca,'XTickLabel',{'Top 25%','Bottom 25%'})
 
 subplot(3,3,3)
-Regionb = bar(Region)
+Regionb = bar(Region);
 title('Region')
 ylabel('Percentage')
 set(gca,'XTickLabel',{'Top 25%','Bottom 25%'})
 
 subplot(3,3,4)
-Medalistb = bar(Medalist)
+Medalistb = bar(Medalist);
 title('Medalist')
 ylabel('Percentage')
 set(gca,'XTickLabel',{'Top 25%','Bottom 25%'})
 
 subplot(3,3,5)
-Schoolb = bar(School)
+Schoolb = bar(School);
 title('School')
 ylabel('Percentage')
 set(gca,'XTickLabel',{'Top 25%','Bottom 25%'})
 
 subplot(3,3,6)
-HSb = bar(HS)
+HSb = bar(HS);
 title('High School Type')
 ylabel('Percentage')
 set(gca,'XTickLabel',{'Top 25%','Bottom 25%'})
 
 subplot(3,3,7)
-SOCb = bar(SOC)
+SOCb = bar(SOC);
 title('Strength of Curriculum')
 ylabel('Percentage')
 set(gca,'XTickLabel',{'Top 25%','Bottom 25%'})
