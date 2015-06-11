@@ -9,12 +9,16 @@ close all;
 num = num(~any(isnan(num),2),:); %remove students with missing data
 
 data = num(:,2:end);
+features = [data(:,34:36) data(:,39:end)];
+
 features = [data(:,1:32) data(:,34:36) data(:,39:end)];
 
+%features = features(:,21);
+%features = features(:,32:end);
 %features = [features(:,1:32) features(:,35:end)];
 %features = features(~any(isnan(features),2),:);
 
-survey = features(:,1:31);
+%survey = features(:,1:31);
 
 s14 = data(:,33); %register labels spring 2014
 f14 = data(:,37); %return labels f14
@@ -31,7 +35,7 @@ s15 = data(:,38); %return labels s15
 % 
 % features = (features - (1/m)*(ones(m,m)*features))*a; 
 
-%% Define testing and trianing sets
+%% Define testing and training sets
 
 % Training and testing matrices for DatasetA
 
@@ -178,9 +182,9 @@ hold off
 %     k_obj(nC,:) = [nC;objective];
 % 
 % end
-
-%%
-
+% 
+% %%
+% 
 % figure
 % hold on
 % plot(k_obj(:,1),k_obj(:,2))
@@ -188,7 +192,17 @@ hold off
 
 
 %biplot(eigenvectors(:,1:2), 'scores',zscores(:,1:2))
+%%
+Train = [Classp_train;Classm_train];
+Test = [Classp_test;Classm_test];
 
+[ptrain_m,ptrain_n]=size(Classp_train);
+[mtrain_m,mtrain_n]=size(Classm_train);
+[ptest_m,ptest_n]=size(Classp_test);
+[mtest_m,mtest_n]=size(Classm_test);
+
+YTrain = [ones(ptrain_m,1);-ones(mtrain_m,1)];
+YTest = [ones(ptest_m,1);-ones(mtest_m,1)];
 
 
 %% Nearest Neighbor
@@ -200,14 +214,14 @@ classifier=knnsearch(Train,Test);
 total_error=0;
 
 %% KNN Error
-[ptrain_m,ptrain_n]=size(Classp_train);
-[mtrain_m,mtrain_n]=size(Classm_train);
-[ptest_m,ptest_n]=size(Classp_test);
-[mtest_m,mtest_n]=size(Classm_test);
+% [ptrain_m,ptrain_n]=size(Classp_train);
+% [mtrain_m,mtrain_n]=size(Classm_train);
+% [ptest_m,ptest_n]=size(Classp_test);
+% [mtest_m,mtest_n]=size(Classm_test);
 
 stay_error=0;
 for i=1:ptest_m,
-    if(YTest(i)~=YTrain(classifier(i)))
+    if YTest(i)~= YTrain(classifier(i))
         stay_error=stay_error+1;
     end
 end
@@ -216,7 +230,7 @@ stay_error_percent = stay_error/size(Classp_test,1) % percent error on those who
 
 leave_error=0;
 for i=ptest_m+1:size(Test,1);
-    if(YTest(i)~=YTrain(classifier(i)))
+    if YTest(i)~= YTrain(classifier(i))
         leave_error=leave_error+1;
     end
 end
@@ -233,37 +247,32 @@ cluster1 = Train(cidx==1,:);
 cluster2 = Train(cidx==2,:);
 cluster3 = Train(cidx==3,:);
 %% Means
-% figure
-% imagesc(corr(cluster1))
-% title('Cluster 1')
-% colorbar
-% 
-% figure
-% imagesc(corr(cluster2))
-% title('Cluster 2')
-% colorbar
-% 
-% figure
-% imagesc(corr(cluster3))
-% title('Cluster 3')
-% colorbar
-% %%
-% figure
-% imagesc(mean(cluster1))
-% title('Cluster 1')
-% colorbar
-% 
-% figure
-% imagesc(mean(cluster2))
-% title('Cluster 2')
-% colorbar
-% 
-% figure
-% imagesc(mean(cluster3))
-% title('Cluster 3')
-% colorbar
+figure
+imagesc(corr(cluster1))
+title('Cluster 1')
+colorbar
 
+figure
+imagesc(corr(cluster2))
+title('Cluster 2')
+colorbar
+
+figure
+imagesc(corr(cluster3))
+title('Cluster 3')
+colorbar
 %%
-% xlswrite('Cluster1.xlsx', cluster1);
-% xlswrite('Cluster2.xlsx', cluster2);
-% xlswrite('Cluster3.xlsx', cluster3);
+figure
+imagesc(mean(cluster1))
+title('Cluster 1')
+colorbar
+
+figure
+imagesc(mean(cluster2))
+title('Cluster 2')
+colorbar
+
+figure
+imagesc(mean(cluster3))
+title('Cluster 3')
+colorbar
