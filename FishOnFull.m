@@ -24,12 +24,12 @@ s15 = data(:,38); %return labels s15
 
 %% Mean center and scale
 
-s=std(features);
-a = diag(1./s);
-[m,n] = size(features);
-one_m = ones(m,m);
-
-features = (features - (1/m)*(ones(m,m)*features))*a; 
+% s=std(features);
+% a = diag(1./s);
+% [m,n] = size(features);
+% one_m = ones(m,m);
+% 
+% features = (features - (1/m)*(ones(m,m)*features))*a; 
 
 %% Define testing and trianing sets
 
@@ -57,7 +57,18 @@ Train = features(1:train_size,:);
 Test = features(train_size+1:end,:);
 YTrain = Y(1:train_size,:);
 YTest = Y(train_size+1:end,:);
+%%
+s=std(Train);
+a = diag(1./s);
+[m,n] = size(Train);
+one_m = ones(m,m);
+train_mean = (1/m)*(ones(1,m)*Train);
 
+Train = (Train - ones(m,1)*train_mean)*a;
+%%
+[m_test,n_test] = size(Test);
+Test = (Test - ones(m_test,1)*train_mean)*a;
+%%
 %Break them up into Class 1 and Class -1
 Classp_train = Train(YTrain==1,:);
 Classm_train = Train(YTrain==0,:);
@@ -109,18 +120,18 @@ nC = 3;
 
 % Do k-means with 10 restarts. 
 opts = statset('Display','final');
-[cidx, ctrs, SUMD, D]= kmeans(features, nC,'Replicates',10,'Options',opts);;
+[cidx, ctrs, SUMD, D]= kmeans(Train, nC,'Replicates',10,'Options',opts);;
 
 % K=means objective
 objective = sum(SUMD);
 
-[eigenvectors, scores, eigenvalues] = pca(features);
+[eigenvectors, scores, eigenvalues] = pca(Train);
 explainedVar = cumsum(eigenvalues./sum(eigenvalues) * 100);
 figure
 bar(explainedVar)
 
 %%
-[eigenvectors,zscores,eigenvalues] = pca(features);
+[eigenvectors,zscores,eigenvalues] = pca(Train);
 
 figure
 gscatter(zscores(:,1),zscores(:,2),cidx);
@@ -134,7 +145,7 @@ legend
 
 for j = 1:m
     
-    plot(20*[0,eigenvectors(j,2)], 20*[0,eigenvectors(j,3)])
+    plot(20*[0,eigenvectors(j,1)], 20*[0,eigenvectors(j,2)])
     
 end
 
@@ -154,26 +165,26 @@ hold off
 
 
 %% Skree Plot
+% 
+% k_obj = ones(15,2);
+% 
+% for nC = 1:15   
+% % Do k-means with 10 restarts. 
+%     opts = statset('Display','final');
+%     [cidx, ctrs, SUMD, D]= kmeans(data, nC,'Replicates',10,'Options',opts);
+% 
+% % K=means objective
+%     objective = sum(SUMD);
+%     k_obj(nC,:) = [nC;objective];
+% 
+% end
 
-k_obj = ones(15,2);
+%%
 
-for nC = 1:15   
-% Do k-means with 10 restarts. 
-    opts = statset('Display','final');
-    [cidx, ctrs, SUMD, D]= kmeans(data, nC,'Replicates',10,'Options',opts);
-
-% K=means objective
-    objective = sum(SUMD);
-    k_obj(nC,:) = [nC;objective];
-
-end
-
-
-
-figure
-hold on
-plot(k_obj(:,1),k_obj(:,2))
-hold off
+% figure
+% hold on
+% plot(k_obj(:,1),k_obj(:,2))
+% hold off
 
 
 %biplot(eigenvectors(:,1:2), 'scores',zscores(:,1:2))
@@ -215,8 +226,44 @@ total_error = leave_error+stay_error
 error_percent = total_error/size(Test,1) % Total error of classifier
 
 
-%
+%% Separate the Clusters
 
 
+cluster1 = Train(cidx==1,:);
+cluster2 = Train(cidx==2,:);
+cluster3 = Train(cidx==3,:);
+%% Means
+% figure
+% imagesc(corr(cluster1))
+% title('Cluster 1')
+% colorbar
+% 
+% figure
+% imagesc(corr(cluster2))
+% title('Cluster 2')
+% colorbar
+% 
+% figure
+% imagesc(corr(cluster3))
+% title('Cluster 3')
+% colorbar
+% %%
+% figure
+% imagesc(mean(cluster1))
+% title('Cluster 1')
+% colorbar
+% 
+% figure
+% imagesc(mean(cluster2))
+% title('Cluster 2')
+% colorbar
+% 
+% figure
+% imagesc(mean(cluster3))
+% title('Cluster 3')
+% colorbar
 
-
+%%
+% xlswrite('Cluster1.xlsx', cluster1);
+% xlswrite('Cluster2.xlsx', cluster2);
+% xlswrite('Cluster3.xlsx', cluster3);
