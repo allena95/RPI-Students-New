@@ -121,27 +121,27 @@ end
 figure
 subplot(2,2,1)
 line(blah1(:,1),blah1(:,2),'Color',[0.2 0.5 0.8],'linewidth',2.5)
-xlabel('SOC code')
-ylabel('Performance')
-title('SOC Code vs. Performance (GPA > 2.67)')
+xlabel('Strength of Curriculum')
+ylabel('Percentage')
+title('SOC Code vs. Percentage of students whose GPA > 2.67')
 
 subplot(2,2,2)
 line(blah2(:,1),blah2(:,2),'Color',[0.2 0.5 0.8],'linewidth',2.5)
-xlabel('SOC code')
-ylabel('Performance')
-title('SOC Code vs. Performance (GPA > 3)')
+xlabel('Strength of Curriculum')
+ylabel('Percentage')
+title('SOC Code vs. Percentage of students whose GPA > 3')
 
 subplot(2,2,3)
 line(blah3(:,1),blah3(:,2),'Color',[0.2 0.5 0.8],'linewidth',2.5)
-xlabel('SOC code')
-ylabel('Performance')
-title('SOC Code vs. Performance (GPA > 3.33)')
+xlabel('Strength of Curriculum')
+ylabel('Percentage')
+title('SOC Code vs. Percentage of students whose GPA > 3.33')
 
 subplot(2,2,4)
 line(blah4(:,1),blah4(:,2),'Color',[0.2 0.5 0.8],'linewidth',2.5)
-xlabel('SOC code')
-ylabel('Performance')
-title('SOC Code vs. Performance (GPA > 3.67)')
+xlabel('Strength of Curriculum')
+ylabel('Percentage')
+title('SOC Code vs. Percentage of students whose GPA > 3.67')
 
 %% Playing around with probplot
 

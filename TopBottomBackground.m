@@ -3,7 +3,7 @@ clear;
 close all;
 
 %% Load in the data
-[num,txt,raw] = xlsread('train.xlsx');
+[num,txt,raw] = xlsread('NoCoursesWithGPA.xlsx');
 [m,n] = size(num);
 
 names = txt(1,[37:42,52,53]);
@@ -203,37 +203,42 @@ figure
 subplot(3,3,1)
 Genderb = bar(Gender);
 title('Gender')
-legend('Girls','Boys')
+% legend('Girls','Boys','Location','best')
 ylabel('Percentage')
 set(gca,'XTickLabel',{'Top 25%','Bottom 25%'})
 
 subplot(3,3,2)
 Citizenb = bar(Citizenship);
 title('Citizenship')
+% legend('Non-Citizen','Permanent Resident','Citizen','Location','best')
 ylabel('Percentage')
 set(gca,'XTickLabel',{'Top 25%','Bottom 25%'})
 
 subplot(3,3,3)
 Regionb = bar(Region);
 title('Region')
+% legend('Northeast','Non-Northeast','Location','best')
 ylabel('Percentage')
 set(gca,'XTickLabel',{'Top 25%','Bottom 25%'})
 
 subplot(3,3,4)
 Medalistb = bar(Medalist);
 title('Medalist')
+% legend('Medalist','Non-Medalist','Location','best')
 ylabel('Percentage')
 set(gca,'XTickLabel',{'Top 25%','Bottom 25%'})
 
 subplot(3,3,5)
 Schoolb = bar(School);
 title('School')
+% legend('Architecture','Engineering','HASS','ITWS','Management','Science','Undeclared','Location','best')
 ylabel('Percentage')
 set(gca,'XTickLabel',{'Top 25%','Bottom 25%'})
 
 subplot(3,3,6)
 HSb = bar(HS);
 title('High School Type')
+% legend('Public','Private','Parochial','Location','best')
 ylabel('Percentage')
 set(gca,'XTickLabel',{'Top 25%','Bottom 25%'})
 
