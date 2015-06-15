@@ -13,6 +13,7 @@ features = [data(:,34:36) data(:,39:end)];
 
 features = [data(:,1:32) data(:,34:36) data(:,39:end)];
 
+%features = features(:,33:37) %gpa only
 %features = features(:,21);
 %features = features(:,32:end);
 %features = [features(:,1:32) features(:,35:end)];
@@ -276,3 +277,8 @@ figure
 imagesc(mean(cluster3))
 title('Cluster 3')
 colorbar
+%% 
+
+figure
+imagesc(ctrs)
+title('Ctrs')
