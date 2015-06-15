@@ -302,9 +302,9 @@ view(tree,'Mode','graph')
 
 test = num3(:,[2:47,49:53]);
 
-yfit = predict(tree, test);     % From prediction result
+yfit = predict(tree, test);
 
-result = num3(:,48);        % From original data set
+result = num3(:,48);
 
 countaccurate = 0;
 posacc = 0;
@@ -313,18 +313,10 @@ negacc = 0;
 for i = 1:size(yfit,1)
     
     
-    if and(result(i) ~= yfit(i),result(i)==1)   % positive class
-        posacc = posacc + 1;
-        countaccurate = countaccurate + 1;
-    elseif and(result(i) ~= yfit(i),result(i)==0) % negative class
-        negacc = negacc + 1;
-        countaccurate = countaccurate + 1;
+    if and(result(i) ~= yfit(i),) 
     end
 
 end
-
-posaccuracy = posacc/sum(result==1)
-negaccuracy = negacc/sum(result==0)
 
 accuracy = countaccurate/size(yfit,1)
 
