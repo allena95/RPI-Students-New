@@ -23,14 +23,15 @@ classp = features(s15==1,:);
 [m,n] = size(classm);
 
 %%
-classm = [classm;classm];
+classm = [classm;classm]; %duplicate the negative class
+%classm = [classm;classm;classm;classm;classm;classm;classm;classm];
 
 classp = [classp ones(size(classp,1),1)];
 classm = [classm zeros(size(classm,1),1)];
 
-reduced = [classp; classm];
-new_features = reduced(:,1:39);
-reduced_labels = reduced(:,40);
+new = [classp; classm];
+new_features = new(:,1:39);
+new_labels = new(:,40);
 
 %%
 
@@ -40,7 +41,7 @@ s=RandStream('mt19937ar','Seed',550);
 %generate a permutation of the data
 p=randperm(s,r);
 new_features=new_features(p,:);
-Y=reduced_labels(p);
+Y=new_labels(p);
 %Use trainpct percent of the data for training and the rest for testing.
 trainpct=.75;
 train_size=ceil(r*trainpct);

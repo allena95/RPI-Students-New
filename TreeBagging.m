@@ -48,7 +48,7 @@ p=randperm(s,r);
 features=features(p,:);
 Y=s15(p);
 %Use trainpct percent of the data for training and the rest for testing.
-trainpct=.75;
+trainpct=.90;
 train_size=ceil(r*trainpct);
 
 % Grab training and test data
@@ -89,7 +89,7 @@ Test = features(train_size+1:end,:);
 % end
 
 NTrees = 35;
-vars = 6
+vars = 10
 
 
 mdl =  TreeBagger(NTrees, Train(:,1:end-1),Train(:,end),'NVarToSample', vars);
