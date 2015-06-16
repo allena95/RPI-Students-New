@@ -76,7 +76,7 @@ Test = features(train_size+1:end,:);
 
 %%
 NTrees = 35;
-mdl =  TreeBagger(NTrees, Train(:,1:end-1),Train(:,end), 'MinLeaf',30 , 'SplitCriterion','gdi', 'Weights', tweights, 'NVarToSample', 50);
+mdl =  TreeBagger(NTrees, Train(:,1:end-1),Train(:,end), 'NVarToSample', 39);
 
 [Y_c,score] = predict(mdl,Test(:,1:end-1));
 
@@ -87,16 +87,9 @@ Y_c = str2double(Y_c);
 %EVAL = [accuracy sensitivity specificity precision recall f_measure gmean];
 EVAL = Evaluate(Y_t,Y_c);
 
-out_idx = i-outage_lists(1)+1;
-
-errors(out_idx,1) = EVAL(1);
-errors(out_idx,2) = EVAL(6);
-
 posclass = 1;
 
 [CX,CY,T,AUC] = perfcurve(Y_t,score(:,1),posclass);
-
-errors(out_idx,3) = AUC;
 
 figure
 plot(CX,CY)
