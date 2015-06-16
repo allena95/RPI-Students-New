@@ -292,19 +292,77 @@ ylabel('GPA')
 % title('All background information for bottom 25%')
 
 %% Decision tree
+% [num2,txt2,raw2] = xlsread('train.xlsx');
+% [num3,txt3,raw3] = xlsread('test.xlsx');
+% 
+% X = num2(:,[2:47,49:53]);
+% Y = num2(:,48);
+% tree = fitctree(X,Y);
+% view(tree,'Mode','graph')
+% 
+% test = num3(:,[2:47,49:53]);
+% 
+% yfit = predict(tree, test);     % From prediction result
+% 
+% result = num3(:,48);        % From original data set
+% 
+% countaccurate = 0;
+% posacc = 0;
+% negacc = 0;
+% 
+% for i = 1:size(yfit,1)
+%     
+%     
+%     if and(result(i) ~= yfit(i),result(i)==1)   % positive class
+%         posacc = posacc + 1;
+%         countaccurate = countaccurate + 1;
+%     elseif and(result(i) ~= yfit(i),result(i)==0) % negative class
+%         negacc = negacc + 1;
+%         countaccurate = countaccurate + 1;
+%     end
+% 
+% end
+% 
+% posaccuracy = posacc/sum(result==1)
+% negaccuracy = negacc/sum(result==0)
+% 
+% accuracy = countaccurate/size(yfit,1)
+
+
+%% Treebagger
+
 [num2,txt2,raw2] = xlsread('train.xlsx');
 [num3,txt3,raw3] = xlsread('test.xlsx');
 
 X = num2(:,[2:47,49:53]);
 Y = num2(:,48);
-tree = fitctree(X,Y);
-view(tree,'Mode','graph')
+
+NTrees = 35
+tree = TreeBagger(NTrees,X,Y,'oobpred','on','NVarToSample', 50);
+treeb = oobError(tree);
+
+figure
+plot(treeb)
+% view(tree,'Mode','graph')
 
 test = num3(:,[2:47,49:53]);
 
-yfit = predict(tree, test);     % From prediction result
+[yfit,score] = predict(tree, test); % From prediction result
+yfit = str2double(yfit)
 
 result = num3(:,48);        % From original data set
+
+
+EVAL = Evaluate(yfit,result);
+
+posclass = 1;
+
+[CX,CY,T,AUC] = perfcurve(yfit,score(:,1),posclass);
+
+AUC
+
+figure
+plot(CX,CY)
 
 countaccurate = 0;
 posacc = 0;
