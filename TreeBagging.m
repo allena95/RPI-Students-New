@@ -12,14 +12,8 @@ data = num(:,2:end);
 features = [data(:,34:36) data(:,39:end)];
 
 features = [data(:,1:32) data(:,34:36) data(:,39:end) data(:,38)];
+%features = [features(:,33:37) features(:,end)] %gpa only
 
-%features = features(:,33:37) %gpa only
-%features = features(:,21);
-%features = features(:,32:end);
-%features = [features(:,1:32) features(:,35:end)];
-%features = features(~any(isnan(features),2),:);
-
-%survey = features(:,1:31);
 
 s14 = data(:,33); %register labels spring 2014
 f14 = data(:,37); %return labels f14
@@ -74,9 +68,31 @@ Test = features(train_size+1:end,:);
 % [m_test,n_test] = size(Test);
 % Test = (Test - ones(m_test,1)*train_mean)*a;
 
-%%
+%% Tree Bagging
+
+% trees = true;                       
+% while trees
+%     
+%     NTrees = round(rand(1)*1000); 
+%     if NTrees ~= 0;                 %Generate a random integer between 0 and
+%         trees = false;              %1000 that is not equal to 0
+%     end
+% end
+% 
+% vary = true;
+% while vary
+%     
+%     vars = round(rand(1)*39); %Generate a random integer between 0 and 39
+%     if vars ~= 0;            %that is not equal to 0
+%         vary = false;
+%     end
+% end
+
 NTrees = 35;
-mdl =  TreeBagger(NTrees, Train(:,1:end-1),Train(:,end), 'NVarToSample', 39);
+vars = 6
+
+
+mdl =  TreeBagger(NTrees, Train(:,1:end-1),Train(:,end),'NVarToSample', vars);
 
 [Y_c,score] = predict(mdl,Test(:,1:end-1));
 
@@ -91,8 +107,13 @@ posclass = 1;
 
 [CX,CY,T,AUC] = perfcurve(Y_t,score(:,1),posclass);
 
+txtv = strcat('ROC Curve ', num2str(vars), ' ', 'Variables', num2str(NTrees), 'Trees');
+
 figure
 plot(CX,CY)
-title('ROC Curve')
+title(txtv)
 
+AUC
+EVAL(1)
+EVAL(end-1)
 
