@@ -103,7 +103,7 @@ Classm_train = Train(YTrain==0,:);
 Classp_test = Test(YTest==1,:);
 Classm_test = Test(YTest==0,:);
 %%
-Train = [Classp_train; Classp_test];
+Train = [Classp_train; Classm_train];
 Test = [Classp_test;Classm_test];
 
 [ptrain_m,ptrain_n]=size(Classp_train);
@@ -113,11 +113,12 @@ Test = [Classp_test;Classm_test];
 
 YTrain = [ones(ptrain_m,1);zeros(mtrain_m,1)];
 YTest = [ones(ptest_m,1);zeros(mtest_m,1)];
+
 %%
 
 classifier=knnsearch(Train,Test);
 total_error=0;
-
+%%
 
 stay_error=0;
 for i=1:ptest_m,

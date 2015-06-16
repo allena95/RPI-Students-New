@@ -55,7 +55,7 @@ Classm_test = Test(YTest==0,:);
 classm = [Classm_test; Classm_train];
 classp = [Classp_test; Classp_train];
 [m,n] = size(classm);
-p = randperm(s,size(classp,1));
+
 
 classp = classp(p,:);
 classp = classp(1:m,:);
@@ -103,7 +103,7 @@ Classm_train = Train(YTrain==0,:);
 
 Classp_test = Test(YTest==1,:);
 Classm_test = Test(YTest==0,:);
-
+%%
 Train = [Classp_train; Classp_test];
 Test = [Classp_test;Classm_test];
 
@@ -112,13 +112,13 @@ Test = [Classp_test;Classm_test];
 [ptest_m,ptest_n]=size(Classp_test);
 [mtest_m,mtest_n]=size(Classm_test);
 
-YTrain = [ones(ptrain_m,1);-ones(mtrain_m,1)];
-YTest = [ones(ptest_m,1);-ones(mtest_m,1)];
+YTrain = [ones(ptrain_m,1);zeros(mtrain_m,1)];
+YTest = [ones(ptest_m,1);zeros(mtest_m,1)];
 %%
 
 classifier=knnsearch(Train,Test);
 total_error=0;
-
+%%
 
 stay_error=0;
 for i=1:ptest_m,
