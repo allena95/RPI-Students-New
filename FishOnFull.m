@@ -86,16 +86,16 @@ Classm_test = Test(YTest==0,:);
 meanp=mean(Classp_train);
 meanm=mean(Classm_train);
 
-psize=size(Classp_train,1)
-nsize=size(Classm_train,1)
+psize=size(Classp_train,1);
+nsize=size(Classm_train,1);
 Bp=Classp_train-ones(psize,1)*meanp;
 Bn=Classm_train-ones(nsize,1)*meanm;
 
 Sw=Bp'*Bp+Bn'*Bn;
 wfisher = Sw\(meanp-meanm)';
-wfisher=wfisher/norm(wfisher)
+wfisher=wfisher/norm(wfisher);
 
-tfisher=(meanp+meanm)./2*wfisher
+tfisher=(meanp+meanm)./2*wfisher;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Analyze training data  results of the Fisher Linear Discriminant
@@ -216,10 +216,6 @@ classifier=knnsearch(Train,Test);
 total_error=0;
 
 %% KNN Error
-% [ptrain_m,ptrain_n]=size(Classp_train);
-% [mtrain_m,mtrain_n]=size(Classm_train);
-% [ptest_m,ptest_n]=size(Classp_test);
-% [mtest_m,mtest_n]=size(Classm_test);
 
 stay_error=0;
 for i=1:ptest_m,
@@ -285,3 +281,19 @@ figure
 imagesc(ctrs)
 title('Ctrs')
 colorbar
+
+%% Normal Vector Weight Thing
+
+[num,txt,raw] = xlsread('featurenames.xlsx');
+names = txt;
+size(eigenvectors*wfisher);
+A = eigenvectors*wfisher;
+A = abs(A);
+[I,B] = sort(A,'descend');
+n = 39;
+for i = 1:n
+    display(sprintf('Word: %s   Score: %d',char(names(B(i))),A(B(i))))
+end;
+
+
+
