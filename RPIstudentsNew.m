@@ -1,4 +1,4 @@
-%% DATUM RPI Students
+%% DATUM RPI Students - Covariance Matrix, Probplot, SOC vs. Percentage, All GPA Boxplot, SAT vs. College GPA, HS GPA vs. College GPA
 clear;
 close all;
 
@@ -6,7 +6,7 @@ close all;
 [num,txt,raw] = xlsread('DataWoutCat.xlsx');
 [m,n] = size(num);
 
-returned15 = num(:,38)
+returned15 = num(:,38);
 %% Separate the original dataset into training and testing
 s=RandStream('mt19937ar','Seed',550);
 %generate a permutation of the data
@@ -30,8 +30,8 @@ YTest = returned15(train_size+1:end,:);
 % Classm_test = Test(YTest==0,:);
 
 %% Correlation image on Train dataset
-TrainNew = Train(~any(isnan(Train),2),:)
-TrainCorr = corr(TrainNew)
+TrainNew = Train(~any(isnan(Train),2),:);
+TrainCorr = corr(TrainNew);
 imagesc(TrainCorr)
 % heatmap = HeatMap(TrainCov)
 
@@ -40,7 +40,7 @@ imagesc(TrainCorr)
 sortedmatrix = num(I,:);
 SOC = sortedmatrix(41:end,:);
 gpaSOC = SOC(:,[41,42]);
-gpaSOC = gpaSOC(~any(isnan(gpaSOC),2),:)
+gpaSOC = gpaSOC(~any(isnan(gpaSOC),2),:);
 
 
 %% Percentage of students with SOC code who did well (GPA > 3.2) in college
@@ -144,8 +144,8 @@ ylabel('Percentage')
 title('SOC Code vs. Percentage of students whose GPA > 3.67')
 
 %% Playing around with probplot
-
-% probplot('normal',gpaSOC(:,1)) % I have no idea what it means :(
+figure
+probplot('normal',gpaSOC(:,1)) 
 
 %% Top and Bottom (Based on GPA)
 [C,J] = sort(Train(:,41),'descend');
@@ -168,4 +168,18 @@ boxplot(Bottom(:,[35:37,40,41]))
 title('All GPA for bottom 25%')
 % imagesc(Bottom(:,[2:32,34:end]))
 
+
+%% Make two graphs about SAT Score, HS GPA, and College GPA
+DataThree = num(:,[33,43,41]);
+DataThree = DataThree(~any(isnan(DataThree),2),:);
+
+figure
+graph1 = plot(DataThree(:,1),DataThree(:,3),'*');
+xlabel('SAT Score')
+ylabel('College GPA')
+
+figure
+graph2 = plot(DataThree(:,2),DataThree(:,3),'*');
+xlabel('High School GPA')
+ylabel('College GPA')
 

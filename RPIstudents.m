@@ -1,4 +1,4 @@
-%% DATUM RPI Students
+%% DATUM RPI Students - SAT, First year GPA, Returned Fall 2015 and Two Survey Figures
 clear;
 close all;
 
@@ -22,9 +22,9 @@ for i = 1:m
     end
 end
 
-a = A(:,1)
+a = A(:,1);
 
-A
+A;
 
 [B,I] = sort(abs(a));
 
@@ -43,16 +43,16 @@ C = cov(SAT_mean_centered, first_year_GPA);
 % colormap(gray);
 % colorbar;
 %% Clustering, run K-means for nC=3 clusters (not working yet)
-
-nC = 3;
-SATreg = num(:,[45,47]);
-
-% Do k-means with 10 restarts. 
-opts = statset('Display','final');
-[cidx, ctrs, SUMD, D]= kmeans(SATreg, nC,'Replicates',10,'Options',opts);
-
-% K=means objective
-objective = sum(SUMD);
+% 
+% nC = 3;
+% SATreg = num(:,[45,47]);
+% 
+% % Do k-means with 10 restarts. 
+% opts = statset('Display','final');
+% [cidx, ctrs, SUMD, D]= kmeans(SATreg, nC,'Replicates',10,'Options',opts);
+% 
+% % K=means objective
+% objective = sum(SUMD);
 % 
 % figure
 % hold on
@@ -69,7 +69,7 @@ for i = 1:m
     if num(i,51) == 0
         plot(num(i,45),num(i,50),'*','MarkerSize',5,'Color','r')
     else if num(i,51) == 1
-            plot(num(i,45),num(i,50),'*','MarkerSize',5,'Color','k')
+            plot(num(i,45),num(i,50),'*','MarkerSize',5,'Color','b')
             
         end
     end
@@ -88,7 +88,7 @@ SurveyMath = A(:,[13,14,15,17]);
 SurveyGrades = sort(SurveyGrades,'descend');
 figure
 imagesc(SurveyGrades)
-colorbar
+colorbar;
 title('Survey Questions 1 2 3');
 xlabel('Answers');
 ylabel('Students');
@@ -105,14 +105,16 @@ ylabel('Students');
 
 %% Covariance on survey
 
-% AllSurvey = A(:,2:36)
+AllSurvey = A(:,[2:20,26:36,52]);     % All Survey Questions and if they returned spring 2015
+AllSurvey = AllSurvey(~any(isnan(AllSurvey),2),:);
 
-% survey_N = size(AllSurvey,1) ;
-% img_mean = mean(AllSurvey);
-% Survey_mean_centered = AllSurvey - ones(survey_N,1)*img_mean
 
-% probplot(num(:,50:51))
-% legend
+survey_N = size(AllSurvey,1) ;
+img_mean = mean(AllSurvey);
+Survey_mean_centered = AllSurvey - ones(survey_N,1)*img_mean;
+
+figure
+imagesc(corr(Survey_mean_centered))
 
 
 %% 

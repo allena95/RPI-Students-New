@@ -107,7 +107,7 @@ posclass = 1;
 
 [CX,CY,T,AUC] = perfcurve(Y_t,score(:,1),posclass);
 
-txtv = strcat('ROC Curve ', num2str(vars), ' ', 'Variables', num2str(NTrees), 'Trees');
+txtv = strcat('ROC Curve ', num2str(vars), ' Variables ', num2str(NTrees), ' Trees');
 
 figure
 plot(CX,CY)
