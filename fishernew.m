@@ -3,14 +3,16 @@ clear;
 close all;
 
 %%
-[num,txt,raw] = xlsread('DataWoutCat.xlsx');
+[num,txt,raw] = xlsread('NoCoursesWithGPA.xlsx');
 
-num = num(~any(isnan(num),2),:); %remove students with missing data
+%num = num(~any(isnan(num),2),:); %remove students with missing data
 
-data = num(:,2:end);
-features = [data(:,34:36) data(:,39:end)];
+data = [num(:,2:43) num(:,45) num(:,47) num(:,51) num(:,49)]; 
+data = data(~any(isnan(data),2),:); %remove students with missing data
 
-features = [data(:,1:32) data(:,34:36) data(:,39:end)];
+features = data(:,1:end-1);
+
+
 
 %features = features(:,33:37) %gpa only
 %features = features(:,21);
@@ -22,7 +24,7 @@ features = [data(:,1:32) data(:,34:36) data(:,39:end)];
 
 s14 = data(:,33); %register labels spring 2014
 f14 = data(:,37); %return labels f14
-s15 = data(:,38); %return labels s15
+s15 = data(:,end); %return labels s15
 %%
 
 [fisherror,w,t,perror_percent,merror_percent,error_total] = ...

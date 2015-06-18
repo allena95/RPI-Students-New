@@ -180,8 +180,62 @@ figure
 imagesc(ctrs)
 title('Ctrs')
 colorbar
+%%
+
+NTrees = 35;
+vars = 10
+options.MaxIter = inf
+
+mdl =  svmtrain(Train,YTrain,'options',options);
+%%
+Y_c = svmclassify(mdl,Test);
+
+%[Y_c,score] = predict(mdl,Test);
+
+Y_t = YTest;
+
+%Y_c = str2double(Y_c);
+
+%EVAL = [accuracy sensitivity specificity precision recall f_measure gmean];
+EVAL = Evaluate(Y_t,Y_c);
+
+posclass = 1;
+
+perror = 0;
+merror = 0;
+for i = 1:size(Y_t,1);
+    if and(Y_t(i)~=Y_c(i),Y_t(i)==0);
+        merror = merror +1;
+    end
+    if and(Y_t(i)==1,Y_t(i)~=Y_c(i));
+        perror = perror +1;
+    end
+end
 
 
-%% Skree Plot
+%% Get the best features for top and bottom
+[num,txt,raw] = xlsread('featurenames2.xlsx');
+names = txt;
+A = eigenvectors*wfisher;
+size(A);
+A = abs(A);
+[I,B] = sort(A,'descend');
+n = 34;
+for i = 1:n
+    display(sprintf('Feature %d: %s   Score: %d',i, char(names(B(i))),A(B(i))))
+end;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

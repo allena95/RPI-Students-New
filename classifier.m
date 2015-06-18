@@ -1,4 +1,4 @@
-function [fisherror,w,t,perror_percent,merror_percent,error_total] = classifier(features,class,trainpct)
+function [fisherror,Training,Testing,w,t,perror_percent,merror_percent,error_total] = classifier(features,class,trainpct)
 %input the features and class label and output fisher's discriminant
 %analysis
 
@@ -115,7 +115,9 @@ total_error = leave_error+stay_error
 error_percent = total_error/size(Test,1) % Total error of classifier
 %%
 
-fisherror = [FisherPosErrorTrain,FisherNegErrorTrain,FisherTrainError,FisherPosErrorTest,FisherNegErrorTest,FisherTestError];
+fisherror = [FisherPosErrorTrain/size(Classp_train,1),FisherNegErrorTrain/size(Classm_train,1),FisherTrainError;FisherPosErrorTest/size(Classp_test,1),FisherNegErrorTest/size(Classm_test,1),FisherTestError];
+Training = [Train,YTrain];
+Testing = [Test,YTest];
 w = wfisher;
 t = tfisher;
 perror_percent = stay_error_percent;

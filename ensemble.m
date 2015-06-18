@@ -108,4 +108,12 @@ for i = 1:size(Y_t,1);
     end
 end
 
+
+
 % ¯\_(?)_/¯ neg error always so high
+
+
+
+
+
+

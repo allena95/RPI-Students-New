@@ -146,13 +146,15 @@ hold on
 legend
 
 [m,n] = size(eigenvectors)
+evectors = num2str((1:m)')
+
 
 
 
 for j = 1:m
     
     plot(20*[0,eigenvectors(j,1)], 20*[0,eigenvectors(j,2)])
-    
+    %text(20*[0,eigenvectors(j,1)], 20*[0,eigenvectors(j,2)], evectors(j))
 end
 
 
@@ -240,11 +242,6 @@ error_percent = total_error/size(Test,1) % Total error of classifier
 
 %% Separate the Clusters
 
-
-cluster1 = Train(cidx==1,:);
-cluster2 = Train(cidx==2,:);
-cluster3 = Train(cidx==3,:);
-
 %%% Correlations & Means
 % figure
 % imagesc(corr(cluster1))
@@ -286,14 +283,23 @@ colorbar
 
 [num,txt,raw] = xlsread('featurenames.xlsx');
 names = txt;
-size(eigenvectors*wfisher);
 A = eigenvectors*wfisher;
+size(A);
 A = abs(A);
 [I,B] = sort(A,'descend');
 n = 39;
 for i = 1:n
-    display(sprintf('Word: %s   Score: %d',char(names(B(i))),A(B(i))))
+    display(sprintf('Feature %d: %s   Score: %d',i, char(names(B(i))),A(B(i))))
 end;
+%%
+trim = 15;
+n_feat = features(:,B);
+
+reduced_features = n_feat(:,1:trim);
+new = [reduced_features s15];
+xlswrite('asdf.xlsx', new) %Write file with top 15 features only
+
+
 
 
 
