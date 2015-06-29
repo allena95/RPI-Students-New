@@ -119,7 +119,7 @@ HistClass(Classp_test,Classm_test,wfisher,tfisher,...
     'Fisher Method Testing Results',FisherTestError);
 %%
 Train = [Classp_train;Classm_train];
-%Train = [Train sort(YTrain,'descend')];
+
 Test = [Classp_test;Classm_test];
 
 nC = 4;
@@ -263,15 +263,15 @@ imagesc(ctrs)
 title('Cluster Centers')
 colorbar
 
-% figure
-% imagesc(ctrsTest)
-% title('CtrsTest')
-% colorbar
-% 
-% figure
-% imagesc(ctrsFull)
-% title('CtrsFull')
-% colorbar
+figure
+imagesc(ctrsTest)
+title('CtrsTest')
+colorbar
+
+figure
+imagesc(ctrsFull)
+title('CtrsFull')
+colorbar
 
 
 

@@ -21,7 +21,7 @@ label2 = data2(:,end);
 [fisherror2,Train2,Test2,w2,t2,perror2,merror2,error_total2] = ...
 classifier(features2,label2,.75);
 
-%Fisher: 35% Train, 36% Test, only ~40% error on leave test
+%Fisher: 35% Train, 36% Test, ~40% error on leave test
 %KNN: 20% error, 88% leave error
 
 %% Only GPA
@@ -59,6 +59,8 @@ s15 = data(:,38); %return labels s15
 [fisherror,Train,Test,w,t,perror,merror,error_total] = ...
 classifier(features,s15,.75);
 
+%Fisher: 13.09% error Train, 17.56% error Test, 61.5% leave test error
+%KNN: ~8% error, ~92% leave error
 
 
 

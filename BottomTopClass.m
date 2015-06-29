@@ -9,11 +9,12 @@ close all;
 
 bottop = [top;bottom];
 
-data = [bottop(:,1:20) bottop(:,25:35) bottop(:,42) bottop(:,51:53)];
+data = [bottop(:,1:20) bottop(:,25:35) bottop(:,42) bottop(:,44:46) bottop(:,49:50) bottop(:,51:53)];
 
 data = data(~any(isnan(data),2),:); %remove students with missing data
 
 features = (data(:,1:end-1));
+%features = [features(:,1:32) features(:,38:39)];
 labels = data(:,end);
 
 
@@ -94,7 +95,7 @@ HistClass(Classp_test,Classm_test,wfisher,tfisher,...
 
 %%
 Test = [Classp_test;Classm_test];
-
+Train = [Classp_train;Classm_train];
 [ptrain_m,ptrain_n]=size(Classp_train);
 [mtrain_m,mtrain_n]=size(Classm_train);
 [ptest_m,ptest_n]=size(Classp_test);
@@ -135,7 +136,7 @@ error_percent = total_error/size(Test,1) % Total error of classifier
 %%
 Train = [Classp_train;Classm_train];
 
-nC = 3;
+nC = 4;
 
 % Do k-means with 10 restarts. 
 opts = statset('Display','final');
@@ -214,19 +215,21 @@ end
 
 
 %% Get the best features for top and bottom
-[num,txt,raw] = xlsread('featurenames2.xlsx');
-names = txt;
-A = eigenvectors*wfisher;
-size(A);
-A = abs(A);
-[I,B] = sort(A,'descend');
-n = 34;
-for i = 1:n
-    display(sprintf('Feature %d: %s   Score: %d',i, char(names(B(i))),A(B(i))))
-end;
+% [num,txt,raw] = xlsread('featurenames2.xlsx');
+% names = txt;
+% A = eigenvectors*wfisher;
+% size(A);
+% A = abs(A);
+% [I,B] = sort(A,'descend');
+% n = size(wfisher,1);
+% for i = 1:n
+%     display(sprintf('Feature %d: %s   Score: %d',i, char(names(B(i))),A(B(i))))
+% end;
 
 
 
+
+%%
 
 
 

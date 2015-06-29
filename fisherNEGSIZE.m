@@ -78,6 +78,9 @@ Classm_train = Train(YTrain==0,:);
 
 Classp_test = Test(YTest==1,:);
 Classm_test = Test(YTest==0,:);
+Classm_test = [Classm_test;Classm_test];
+YTest = [YTest;YTest];
+
 
 %% Fisher method
 
@@ -117,106 +120,31 @@ FisherTestError= ((FisherPosErrorTest + FisherNegErrorTest)/(size(Test,1)))
 % Histogram of Fisher Testing Results
 HistClass(Classp_test,Classm_test,wfisher,tfisher,...
     'Fisher Method Testing Results',FisherTestError);
-%%
-Train = [Classp_train;Classm_train];
-%Train = [Train sort(YTrain,'descend')];
-Test = [Classp_test;Classm_test];
-
-nC = 4;
-
-% Do k-means with 10 restarts. 
-opts = statset('Display','final');
-[cidx, ctrs, SUMD, D]= kmeans(Train, nC,'Replicates',10,'Options',opts);
-
-% K=means objective
-objective = sum(SUMD);
-
-[eigenvectors, scores, eigenvalues] = pca(Train);
-explainedVar = cumsum(eigenvalues./sum(eigenvalues) * 100);
-figure
-bar(explainedVar)
-
-%% K-Means Test and Full
-
-% 
-% total = [Train; Test];
-% 
-% % Do k-means with 10 restarts. 
-% opts = statset('Display','final');
-% [cidxTest, ctrsTest, SUMD, D]= kmeans(Test, nC,'Replicates',10,'Options',opts);;
-% 
-% % K=means objective
-% objective = sum(SUMD);
-% 
-% 
-% % Do k-means with 10 restarts. 
-% opts = statset('Display','final');
-% [cidxfull, ctrsFull, SUMD, D]= kmeans(total, nC,'Replicates',10,'Options',opts);;
-% 
-% % K=means objective
-% objective = sum(SUMD);
-
-
-%%
-[eigenvectors,zscores,eigenvalues] = pca(Train);
-
-figure
-gscatter(zscores(:,1),zscores(:,2),cidx);
-
-hold on
-legend
-
-[m,n] = size(eigenvectors)
-evectors = num2str((1:m)')
 
 
 
 
-for j = 1:m
-    
-    plot(20*[0,eigenvectors(j,1)], 20*[0,eigenvectors(j,2)])
-    %text(20*[0,eigenvectors(j,1)], 20*[0,eigenvectors(j,2)], evectors(j))
-end
-
-
-
-% turn off the ticks
-%set(gca,'xtick',[])
-%set(gca,'ytick',[])
-
-axis square
-xlabel('First Principal Component');
-ylabel('Second Principal Component');
-title('Principal Component Scatter Plot');
-hold off
 
 
 
 
-%% Skree Plot
-% 
-% k_obj = ones(15,2);
-% 
-% for nC = 1:15   
-% % Do k-means with 10 restarts. 
-%     opts = statset('Display','final');
-%     [cidx, ctrs, SUMD, D]= kmeans(data, nC,'Replicates',10,'Options',opts);
-% 
-% % K=means objective
-%     objective = sum(SUMD);
-%     k_obj(nC,:) = [nC;objective];
-% 
-% end
-% 
-% %%
-% 
-% figure
-% hold on
-% plot(k_obj(:,1),k_obj(:,2))
-% hold off
 
 
-%biplot(eigenvectors(:,1:2), 'scores',zscores(:,1:2))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 %%
 
 [ptrain_m,ptrain_n]=size(Classp_train);
@@ -255,24 +183,6 @@ leave_error_percent = leave_error/size(Classm_test,1) % percent error on those w
 
 total_error = leave_error+stay_error
 error_percent = total_error/size(Test,1) % Total error of classifier
-
-%% 
-
-figure
-imagesc(ctrs)
-title('Cluster Centers')
-colorbar
-
-% figure
-% imagesc(ctrsTest)
-% title('CtrsTest')
-% colorbar
-% 
-% figure
-% imagesc(ctrsFull)
-% title('CtrsFull')
-% colorbar
-
 
 
 %% Normal Vector Weight Thing
@@ -325,6 +235,9 @@ end
 
 
 EVAL_f = Evaluate(YTest,Y_f);
-%%
+
+
+
+
 
 

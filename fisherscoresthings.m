@@ -27,12 +27,16 @@ s15 = want(:,end); %return labels s15
 
 %% Mean center and scale
 
-% s=std(features);
-% a = diag(1./s);
-% [m,n] = size(features);
-% one_m = ones(m,m);
-% 
-% features = (features - (1/m)*(ones(m,m)*features))*a; 
+s=std(features);
+a = diag(1./s);
+[m,n] = size(features);
+one_m = ones(m,m);
+
+features = (features - (1/m)*(ones(m,m)*features))*a; 
+
+[eigenvectors,scores,eigenvalues] = pca(features);
+features = scores;
+
 
 %% Define testing and training sets
 
@@ -119,14 +123,14 @@ HistClass(Classp_test,Classm_test,wfisher,tfisher,...
     'Fisher Method Testing Results',FisherTestError);
 %%
 Train = [Classp_train;Classm_train];
-%Train = [Train sort(YTrain,'descend')];
+
 Test = [Classp_test;Classm_test];
 
 nC = 4;
 
 % Do k-means with 10 restarts. 
 opts = statset('Display','final');
-[cidx, ctrs, SUMD, D]= kmeans(Train, nC,'Replicates',10,'Options',opts);
+[cidx, ctrs, SUMD, D]= kmeans(Train, nC,'Replicates',10,'Options',opts);;
 
 % K=means objective
 objective = sum(SUMD);
@@ -135,27 +139,6 @@ objective = sum(SUMD);
 explainedVar = cumsum(eigenvalues./sum(eigenvalues) * 100);
 figure
 bar(explainedVar)
-
-%% K-Means Test and Full
-
-% 
-% total = [Train; Test];
-% 
-% % Do k-means with 10 restarts. 
-% opts = statset('Display','final');
-% [cidxTest, ctrsTest, SUMD, D]= kmeans(Test, nC,'Replicates',10,'Options',opts);;
-% 
-% % K=means objective
-% objective = sum(SUMD);
-% 
-% 
-% % Do k-means with 10 restarts. 
-% opts = statset('Display','final');
-% [cidxfull, ctrsFull, SUMD, D]= kmeans(total, nC,'Replicates',10,'Options',opts);;
-% 
-% % K=means objective
-% objective = sum(SUMD);
-
 
 %%
 [eigenvectors,zscores,eigenvalues] = pca(Train);
@@ -226,6 +209,8 @@ hold off
 
 YTrain = [ones(ptrain_m,1);zeros(mtrain_m,1)];
 YTest = [ones(ptest_m,1);zeros(mtest_m,1)];
+
+
 %% Nearest Neighbor
 % Finds the nearest element in Train for each element in Test.
 % Classifier gives the index of the nearest Train for the corresponding 
@@ -233,7 +218,7 @@ YTest = [ones(ptest_m,1);zeros(mtest_m,1)];
 
 classifier=knnsearch(Train,Test);
 total_error=0;
-Y_c = YTrain(classifier);
+Y_c = YTrain(classifier)
 %% KNN Error
 
 stay_error=0;
@@ -260,26 +245,14 @@ error_percent = total_error/size(Test,1) % Total error of classifier
 
 figure
 imagesc(ctrs)
-title('Cluster Centers')
+title('Ctrs')
 colorbar
-
-% figure
-% imagesc(ctrsTest)
-% title('CtrsTest')
-% colorbar
-% 
-% figure
-% imagesc(ctrsFull)
-% title('CtrsFull')
-% colorbar
-
-
 
 %% Normal Vector Weight Thing
 
 [num,txt,raw] = xlsread('featurenames.xlsx');
 names = txt;
-A = wfisher;
+A = eigenvectors*wfisher;
 [m,n] = size(A);
 %A = abs(A);
 [I,B] = sort(abs(A),'descend');
@@ -325,6 +298,9 @@ end
 
 
 EVAL_f = Evaluate(YTest,Y_f);
-%%
+
+
+
+
 
 

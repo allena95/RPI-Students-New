@@ -4,7 +4,7 @@ clear;
 close all;
 
 %%
-[num,txt,raw] = xlsread('DataWoutCat.xlsx');
+[num,txt,raw] = xlsread('DataWQ.xlsx');
 
 %num = num(~any(isnan(num),2),:); %remove students with missing data
 
@@ -12,7 +12,7 @@ data = num(:,2:end);
 
 features = [data(:,1:33) data(:,35:37) data(:,40:end)];
 
-want = [data(:,1:32) data(:,34:36) data(:,39:end) data(:,33), data(:,37), data(:,38)];
+want = [data(:,1:33) data(:,35:37) data(:,40:end) data(:,34), data(:,38), data(:,39)];
 %want = want(:,33:end);
 want = want(~any(isnan(want),2),:); %remove students with missing data
 
@@ -119,43 +119,45 @@ HistClass(Classp_test,Classm_test,wfisher,tfisher,...
     'Fisher Method Testing Results',FisherTestError);
 %%
 Train = [Classp_train;Classm_train];
-%Train = [Train sort(YTrain,'descend')];
+
 Test = [Classp_test;Classm_test];
 
-nC = 4;
+nC = 3;
 
 % Do k-means with 10 restarts. 
 opts = statset('Display','final');
-[cidx, ctrs, SUMD, D]= kmeans(Train, nC,'Replicates',10,'Options',opts);
+[cidx, ctrs, SUMD, D]= kmeans(Train, nC,'Replicates',10,'Options',opts);;
 
 % K=means objective
 objective = sum(SUMD);
+
+% Do k-means with 10 restarts. Test
+opts = statset('Display','final');
+[cidx2, ctrs2, SUMD, D]= kmeans(Test, nC,'Replicates',10,'Options',opts);;
+
+% K=means objective
+objective2 = sum(SUMD)
+
+
+
+total = [Train;Test]
+YTotal = [YTrain;YTest]
+
+% Do k-means with 10 restarts. Test
+opts = statset('Display','final');
+[cidx3, ctrs3, SUMD, D]= kmeans(total, nC,'Replicates',10,'Options',opts);;
+
+% K=means objective
+objective3 = sum(SUMD)
+
+
+
+
 
 [eigenvectors, scores, eigenvalues] = pca(Train);
 explainedVar = cumsum(eigenvalues./sum(eigenvalues) * 100);
 figure
 bar(explainedVar)
-
-%% K-Means Test and Full
-
-% 
-% total = [Train; Test];
-% 
-% % Do k-means with 10 restarts. 
-% opts = statset('Display','final');
-% [cidxTest, ctrsTest, SUMD, D]= kmeans(Test, nC,'Replicates',10,'Options',opts);;
-% 
-% % K=means objective
-% objective = sum(SUMD);
-% 
-% 
-% % Do k-means with 10 restarts. 
-% opts = statset('Display','final');
-% [cidxfull, ctrsFull, SUMD, D]= kmeans(total, nC,'Replicates',10,'Options',opts);;
-% 
-% % K=means objective
-% objective = sum(SUMD);
-
 
 %%
 [eigenvectors,zscores,eigenvalues] = pca(Train);
@@ -226,6 +228,8 @@ hold off
 
 YTrain = [ones(ptrain_m,1);zeros(mtrain_m,1)];
 YTest = [ones(ptest_m,1);zeros(mtest_m,1)];
+
+
 %% Nearest Neighbor
 % Finds the nearest element in Train for each element in Test.
 % Classifier gives the index of the nearest Train for the corresponding 
@@ -233,7 +237,7 @@ YTest = [ones(ptest_m,1);zeros(mtest_m,1)];
 
 classifier=knnsearch(Train,Test);
 total_error=0;
-Y_c = YTrain(classifier);
+Y_c = YTrain(classifier)
 %% KNN Error
 
 stay_error=0;
@@ -260,31 +264,33 @@ error_percent = total_error/size(Test,1) % Total error of classifier
 
 figure
 imagesc(ctrs)
-title('Cluster Centers')
+title('Ctrs')
 colorbar
 
-% figure
-% imagesc(ctrsTest)
-% title('CtrsTest')
-% colorbar
-% 
-% figure
-% imagesc(ctrsFull)
-% title('CtrsFull')
-% colorbar
 
 
+figure
+imagesc(ctrs2)
+title('Ctrs Test')
+colorbar
+
+
+
+figure
+imagesc(ctrs3)
+title('Ctrs Full')
+colorbar
 
 %% Normal Vector Weight Thing
 
 [num,txt,raw] = xlsread('featurenames.xlsx');
 names = txt;
 A = wfisher;
-[m,n] = size(A);
-%A = abs(A);
-[I,B] = sort(abs(A),'descend');
-
-for i = 1:m
+size(A);
+A = abs(A);
+[I,B] = sort(A,'descend');
+n = 39;
+for i = 1:n
     display(sprintf('Feature %d: %s   Score: %d',i, char(names(B(i))),A(B(i))))
 end;
 %%
@@ -325,6 +331,9 @@ end
 
 
 EVAL_f = Evaluate(YTest,Y_f);
-%%
+
+
+
+
 
 

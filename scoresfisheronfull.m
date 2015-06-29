@@ -6,33 +6,39 @@ close all;
 %%
 [num,txt,raw] = xlsread('DataWoutCat.xlsx');
 
-%num = num(~any(isnan(num),2),:); %remove students with missing data
+num = num(~any(isnan(num),2),:); %remove students with missing data
 
 data = num(:,2:end);
+features = [data(:,34:36) data(:,39:end)];
 
-features = [data(:,1:33) data(:,35:37) data(:,40:end)];
+features = [data(:,1:32) data(:,34:36) data(:,39:end)];
 
-want = [data(:,1:32) data(:,34:36) data(:,39:end) data(:,33), data(:,37), data(:,38)];
-%want = want(:,33:end);
-want = want(~any(isnan(want),2),:); %remove students with missing data
+%features = features(:,33:37) %gpa only
+%features = features(:,21);
+%features = features(:,32:end);
+%features = [features(:,1:32) features(:,35:end)];
+%features = features(~any(isnan(features),2),:);
 
-features = want(:,1:end-3);
+%survey = features(:,1:31);
 
-
-s14 = want(:,end-2); %register labels spring 2014
-f14 = want(:,end-1); %return labels f14
-s15 = want(:,end); %return labels s15
+s14 = data(:,33); %register labels spring 2014
+f14 = data(:,37); %return labels f14
+s15 = data(:,38); %return labels s15
 
 %s15 = s15(~any(isnan(features),2),:);
 
 %% Mean center and scale
 
-% s=std(features);
-% a = diag(1./s);
-% [m,n] = size(features);
-% one_m = ones(m,m);
-% 
-% features = (features - (1/m)*(ones(m,m)*features))*a; 
+s=std(features);
+a = diag(1./s);
+[m,n] = size(features);
+one_m = ones(m,m);
+
+features = (features - (1/m)*(ones(m,m)*features))*a; 
+[eigenvectors,scores,eigenvalues] = pca(features);
+features = scores(:,1:10);
+seed = round(rand(1)*1000);
+
 
 %% Define testing and training sets
 
@@ -60,17 +66,6 @@ Train = features(1:train_size,:);
 Test = features(train_size+1:end,:);
 YTrain = Y(1:train_size,:);
 YTest = Y(train_size+1:end,:);
-%%
-s=std(Train);
-a = diag(1./s);
-[m,n] = size(Train);
-one_m = ones(m,m);
-train_mean = (1/m)*(ones(1,m)*Train);
-
-Train = (Train - ones(m,1)*train_mean)*a;
-%%
-[m_test,n_test] = size(Test);
-Test = (Test - ones(m_test,1)*train_mean)*a;
 %%
 %Break them up into Class 1 and Class -1
 Classp_train = Train(YTrain==1,:);
@@ -119,14 +114,12 @@ HistClass(Classp_test,Classm_test,wfisher,tfisher,...
     'Fisher Method Testing Results',FisherTestError);
 %%
 Train = [Classp_train;Classm_train];
-%Train = [Train sort(YTrain,'descend')];
 Test = [Classp_test;Classm_test];
-
-nC = 4;
+nC = 3;
 
 % Do k-means with 10 restarts. 
 opts = statset('Display','final');
-[cidx, ctrs, SUMD, D]= kmeans(Train, nC,'Replicates',10,'Options',opts);
+[cidx, ctrs, SUMD, D]= kmeans(Train, nC,'Replicates',10,'Options',opts);;
 
 % K=means objective
 objective = sum(SUMD);
@@ -135,27 +128,6 @@ objective = sum(SUMD);
 explainedVar = cumsum(eigenvalues./sum(eigenvalues) * 100);
 figure
 bar(explainedVar)
-
-%% K-Means Test and Full
-
-% 
-% total = [Train; Test];
-% 
-% % Do k-means with 10 restarts. 
-% opts = statset('Display','final');
-% [cidxTest, ctrsTest, SUMD, D]= kmeans(Test, nC,'Replicates',10,'Options',opts);;
-% 
-% % K=means objective
-% objective = sum(SUMD);
-% 
-% 
-% % Do k-means with 10 restarts. 
-% opts = statset('Display','final');
-% [cidxfull, ctrsFull, SUMD, D]= kmeans(total, nC,'Replicates',10,'Options',opts);;
-% 
-% % K=means objective
-% objective = sum(SUMD);
-
 
 %%
 [eigenvectors,zscores,eigenvalues] = pca(Train);
@@ -219,6 +191,8 @@ hold off
 %biplot(eigenvectors(:,1:2), 'scores',zscores(:,1:2))
 %%
 
+Test = [Classp_test;Classm_test];
+
 [ptrain_m,ptrain_n]=size(Classp_train);
 [mtrain_m,mtrain_n]=size(Classm_train);
 [ptest_m,ptest_n]=size(Classp_test);
@@ -226,6 +200,8 @@ hold off
 
 YTrain = [ones(ptrain_m,1);zeros(mtrain_m,1)];
 YTest = [ones(ptest_m,1);zeros(mtest_m,1)];
+
+
 %% Nearest Neighbor
 % Finds the nearest element in Train for each element in Test.
 % Classifier gives the index of the nearest Train for the corresponding 
@@ -233,12 +209,12 @@ YTest = [ones(ptest_m,1);zeros(mtest_m,1)];
 
 classifier=knnsearch(Train,Test);
 total_error=0;
-Y_c = YTrain(classifier);
+
 %% KNN Error
 
 stay_error=0;
 for i=1:ptest_m,
-    if YTest(i)~= Y_c(i);
+    if YTest(i)~= YTrain(classifier(i))
         stay_error=stay_error+1;
     end
 end
@@ -247,7 +223,7 @@ stay_error_percent = stay_error/size(Classp_test,1) % percent error on those who
 
 leave_error=0;
 for i=ptest_m+1:size(Test,1);
-    if YTest(i)~= Y_c(i);
+    if YTest(i)~= YTrain(classifier(i))
         leave_error=leave_error+1;
     end
 end
@@ -260,71 +236,23 @@ error_percent = total_error/size(Test,1) % Total error of classifier
 
 figure
 imagesc(ctrs)
-title('Cluster Centers')
+title('Ctrs')
 colorbar
-
-% figure
-% imagesc(ctrsTest)
-% title('CtrsTest')
-% colorbar
-% 
-% figure
-% imagesc(ctrsFull)
-% title('CtrsFull')
-% colorbar
-
-
 
 %% Normal Vector Weight Thing
 
 [num,txt,raw] = xlsread('featurenames.xlsx');
 names = txt;
-A = wfisher;
-[m,n] = size(A);
-%A = abs(A);
-[I,B] = sort(abs(A),'descend');
-
-for i = 1:m
+A = eigenvectors*wfisher;
+size(A);
+A = abs(A);
+[I,B] = sort(A,'descend');
+n = 10;
+for i = 1:n
     display(sprintf('Feature %d: %s   Score: %d',i, char(names(B(i))),A(B(i))))
 end;
 %%
-trim = 15;
-n_feat = features(:,B);
-
-reduced_features = n_feat(:,1:trim);
-new = [reduced_features s15];
-xlswrite('asdf.xlsx', new) %Write file with top 15 features only
 
 
-%% Evaluate KNN
-
-EVAL = Evaluate(YTest,Y_c);
-
-%% Evaluate Fisher
-[m,n] = size(Classp_test);
-[mm,mn] = size(Classm_test);
-Test = [Classp_test;Classm_test];
-
-
-for i = 1:m;
-    YTest(i) = 1;
-end
-for i = m+1:mm;
-    YTest(i) = 0;
-end;
-
-Y_f = nan(size(Test,1),1);
-for i = 1:size(Test,1);
-    if Test(i,:)*wfisher<=tfisher;
-        Y_f(i) = 0;
-    end
-    if Test(i,:)*wfisher>=tfisher;
-        Y_f(i)=1;
-    end
-end
-
-
-EVAL_f = Evaluate(YTest,Y_f);
-%%
-
-
+seed
+%
