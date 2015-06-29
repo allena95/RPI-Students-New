@@ -200,55 +200,61 @@ HS = [HSTop;HSBottom];
 SOC = [SOCTop;SOCBottom];
 
 figure
-subplot(3,3,1)
+% subplot(3,3,1)
 Genderb = bar(Gender);
 title('Gender')
-% legend('Girls','Boys','Location','best')
+legend('Girls','Boys','Location','east')
 ylabel('Percentage')
 set(gca,'XTickLabel',{'Top 25%','Bottom 25%'})
-
-subplot(3,3,2)
+% 
+% subplot(3,3,2)
+figure
 Citizenb = bar(Citizenship);
 title('Citizenship')
-% legend('Non-Citizen','Permanent Resident','Citizen','Location','best')
+legend('Non-Citizen','Permanent Resident','Citizen','Location','east')
 ylabel('Percentage')
 set(gca,'XTickLabel',{'Top 25%','Bottom 25%'})
 
-subplot(3,3,3)
+figure
+% subplot(3,3,3)
 Regionb = bar(Region);
 title('Region')
-% legend('Northeast','Non-Northeast','Location','best')
+legend('Northeast','Non-Northeast','Location','northeast')
 ylabel('Percentage')
 set(gca,'XTickLabel',{'Top 25%','Bottom 25%'})
 
-subplot(3,3,4)
+figure
+% subplot(3,3,4)
 Medalistb = bar(Medalist);
 title('Medalist')
-% legend('Medalist','Non-Medalist','Location','best')
+legend('Medalist','Non-Medalist','Location','east')
 ylabel('Percentage')
 set(gca,'XTickLabel',{'Top 25%','Bottom 25%'})
 
-subplot(3,3,5)
+figure
+% subplot(3,3,5)
 Schoolb = bar(School);
 title('School')
-% legend('Architecture','Engineering','HASS','ITWS','Management','Science','Undeclared','Location','best')
+legend('Architecture','Engineering','HASS','ITWS','Management','Science','Undeclared','Location','northeast')
 ylabel('Percentage')
 set(gca,'XTickLabel',{'Top 25%','Bottom 25%'})
 
-subplot(3,3,6)
+figure
+% subplot(3,3,6)
 HSb = bar(HS);
 title('High School Type')
-% legend('Public','Private','Parochial','Location','best')
+legend('Public','Private','Parochial','Location','east')
 ylabel('Percentage')
 set(gca,'XTickLabel',{'Top 25%','Bottom 25%'})
 
-subplot(3,3,7)
+figure
+% subplot(3,3,7)
 SOCb = bar(SOC);
 title('Strength of Curriculum')
 ylabel('Percentage')
 set(gca,'XTickLabel',{'Top 25%','Bottom 25%'})
 
-subplot(3,3,8)
+% subplot(3,3,8)
 % GPA boxplot
 % figure
 % boxplot([TopBackgr(:,8:end),BottomBackgr(:,8:end)])
@@ -263,6 +269,7 @@ subplot(3,3,8)
 
 
 % subplot(1,2,1)
+figure
 boxplot([TopBackgr(:,8),BottomBackgr(:,8)],'labels',{'Top 25%','Bottom 25%'})
 title('High School GPA of Top 25% and bottom 25%')
 ylabel('GPA')
@@ -292,41 +299,41 @@ ylabel('GPA')
 % title('All background information for bottom 25%')
 
 %% Decision tree
-% [num2,txt2,raw2] = xlsread('train.xlsx');
-% [num3,txt3,raw3] = xlsread('test.xlsx');
-% 
-% X = num2(:,[2:47,49:53]);
-% Y = num2(:,48);
-% tree = fitctree(X,Y);
-% view(tree,'Mode','graph')
-% 
-% test = num3(:,[2:47,49:53]);
-% 
-% yfit = predict(tree, test);     % From prediction result
-% 
-% result = num3(:,48);        % From original data set
-% 
-% countaccurate = 0;
-% posacc = 0;
-% negacc = 0;
-% 
-% for i = 1:size(yfit,1)
-%     
-%     
-%     if and(result(i) ~= yfit(i),result(i)==1)   % positive class
-%         posacc = posacc + 1;
-%         countaccurate = countaccurate + 1;
-%     elseif and(result(i) ~= yfit(i),result(i)==0) % negative class
-%         negacc = negacc + 1;
-%         countaccurate = countaccurate + 1;
-%     end
-% 
-% end
-% 
-% posaccuracy = posacc/sum(result==1)
-% negaccuracy = negacc/sum(result==0)
-% 
-% accuracy = countaccurate/size(yfit,1)
+[num2,txt2,raw2] = xlsread('train.xlsx');
+[num3,txt3,raw3] = xlsread('test.xlsx');
+
+X = num2(:,[2:47,49:53]);
+Y = num2(:,48);
+tree = fitctree(X,Y);
+view(tree,'Mode','graph')
+
+test = num3(:,[2:47,49:53]);
+
+yfit = predict(tree, test);     % From prediction result
+
+result = num3(:,48);        % From original data set
+
+countaccurate = 0;
+posacc = 0;
+negacc = 0;
+
+for i = 1:size(yfit,1)
+    
+    
+    if and(result(i) ~= yfit(i),result(i)==1)   % positive class
+        posacc = posacc + 1;
+        countaccurate = countaccurate + 1;
+    elseif and(result(i) ~= yfit(i),result(i)==0) % negative class
+        negacc = negacc + 1;
+        countaccurate = countaccurate + 1;
+    end
+
+end
+
+posaccuracy = posacc/sum(result==1)
+negaccuracy = negacc/sum(result==0)
+
+accuracy = countaccurate/size(yfit,1)
 
 
 %% Treebagger
@@ -388,16 +395,31 @@ ylabel('GPA')
 
 %% Naive Bayes Classifier
 
-[num2,txt2,raw2] = xlsread('train.xlsx');
-[num3,txt3,raw3] = xlsread('test.xlsx');
+% [num2,txt2,raw2] = xlsread('train.xlsx');
+% [num3,txt3,raw3] = xlsread('test.xlsx');
+% 
+% X = num2(:,[2:20,26:36,45:47,51:53]);
+% Y = num2(:,48);
+% 
+% NBModel = fitNaiveBayes(X,Y);
+% 
+% 
+% 
+%  test = num3(:,[2:20,26:36,45:47,51:53]);
+% 
+% prediction = predict(NBModel, test)
 
-X = num2(:,[2:20,26:36,45:47,51:53]);
-Y = num2(:,48);
 
-NBModel = fitNaiveBayes(X,Y);
+%% SVM by using fitnsvm
 
-
-
- test = num3(:,[2:20,26:36,45:47,51:53]);
-
-prediction = predict(NBModel, test)
+% [num2,txt2,raw2] = xlsread('train.xlsx');
+% [num3,txt3,raw3] = xlsread('test.xlsx');
+% 
+% % X = num2(:,[2:20,26:36,45:47,51:53]);
+% % Y = num2(:,48);
+% 
+% SVMModel = fitcsvm(X,Y);
+% 
+% % test = num3(:,[2:20,26:36,45:47,51:53]);
+% 
+% predictionSVM = predict(SVMModel, test)

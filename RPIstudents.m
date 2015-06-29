@@ -39,6 +39,7 @@ first_year_GPA = A(:,50);
 
 C = cov(SAT_mean_centered, first_year_GPA);
 
+% figure
 % imagesc(C)   
 % colormap(gray);
 % colorbar;
@@ -77,31 +78,31 @@ end
 
 xlabel('SAT Score');
 ylabel('First Year GPA');
-title('SAT, First year GPA, Returned Fall 2015');
+title('SAT, First year GPA, Returned Fall 2014');
 
 hold off
 
 %% Survey part
-SurveyGrades = A(:,[2,3,4]); % take out the parts i think are important
-SurveyMath = A(:,[13,14,15,17]);
-
-SurveyGrades = sort(SurveyGrades,'descend');
-figure
-imagesc(SurveyGrades)
-colorbar;
-title('Survey Questions 1 2 3');
-xlabel('Answers');
-ylabel('Students');
-
-% boxplot(SurveyGrades)
-
-figure
-SurveyMath = sort(SurveyMath,'descend');
-imagesc(SurveyMath)
-colorbar
-title('Survey Questions 12 13 14 16');
-xlabel('Answers');
-ylabel('Students');
+% SurveyGrades = A(:,[2,3,4]); % take out the parts i think are important
+% SurveyMath = A(:,[13,14,15,17]);
+% 
+% SurveyGrades = sort(SurveyGrades,'descend');
+% figure
+% imagesc(SurveyGrades)
+% colorbar;
+% title('Survey Questions 1 2 3');
+% xlabel('Answers');
+% ylabel('Students');
+% 
+% % boxplot(SurveyGrades)
+% 
+% figure
+% SurveyMath = sort(SurveyMath,'descend');
+% imagesc(SurveyMath)
+% colorbar
+% title('Survey Questions 12 13 14 16');
+% xlabel('Answers');
+% ylabel('Students');
 
 %% Covariance on survey
 

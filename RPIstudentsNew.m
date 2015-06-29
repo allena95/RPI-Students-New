@@ -183,3 +183,17 @@ graph2 = plot(DataThree(:,2),DataThree(:,3),'*');
 xlabel('High School GPA')
 ylabel('College GPA')
 
+%% Correlation Matrix
+
+All = num(:,[2:33,35:37,39:end]);     % All Survey Questions and if they returned spring 2015
+All = All(~any(isnan(All),2),:);
+
+
+survey_N = size(All,1) ;
+img_mean = mean(All);
+Survey_mean_centered = All - ones(survey_N,1)*img_mean;
+
+figure
+imagesc(corr(Survey_mean_centered))
+colorbar
+

@@ -1,4 +1,3 @@
-
 %% DATUM RPI Students - Predict leaving Spring 2015
 clear;
 close all;

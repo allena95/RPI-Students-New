@@ -55,17 +55,17 @@ Bp=score_trainp-ones(psize,1)*meanp;   % Fisher train using scores as features
 Bn=score_trainm-ones(nsize,1)*meanm;
 Sw=Bp'*Bp+Bn'*Bn;
 wfisher = Sw\(meanp-meanm)';
-wfisher=wfisher/norm(wfisher);
+wfisher=wfisher/norm(wfisher)
 
 tfisher=(meanp+meanm)./2*wfisher;
 
 FisherPosErrorTrain = sum(score_trainp*wfisher <= tfisher); % Fisher train using scores as features 
-FisherPosTrainError = FisherPosErrorTrain/size(score_trainp,1);
+FisherPosTrainError = FisherPosErrorTrain/size(score_trainp,1)
 
 FisherNegErrorTrain = sum(score_trainm*wfisher >= tfisher);
-FisherNegTrainError = FisherNegErrorTrain/size(score_trainm,1);
+FisherNegTrainError = FisherNegErrorTrain/size(score_trainm,1)
 
-FisherTrainError = (FisherPosErrorTrain + FisherNegErrorTrain)/train_N;
+FisherTrainError = (FisherPosErrorTrain + FisherNegErrorTrain)/train_N
 
 %% Examine the normal of the hyperplane in the original data set
 nums = eigenvectors * wfisher;
