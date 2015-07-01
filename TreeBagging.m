@@ -47,7 +47,7 @@ p=randperm(s,r);
 features=features(p,:);
 Y=s15(p);
 %Use trainpct percent of the data for training and the rest for testing.
-trainpct=.90;
+trainpct=.75;
 train_size=ceil(r*trainpct);
 
 % Grab training and test data
@@ -87,8 +87,10 @@ Test = features(train_size+1:end,:);
 %     end
 % end
 
-NTrees = 35;
-vars = 10
+
+
+NTrees = 20;
+vars = 'all'
 
 
 mdl =  TreeBagger(NTrees, Train(:,1:end-1),Train(:,end),'NVarToSample', vars);
@@ -116,3 +118,4 @@ AUC
 EVAL(1)
 EVAL(end-1)
 
+C = confusionmat(Y_t,Y_c) %confusion matrix

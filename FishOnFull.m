@@ -325,6 +325,23 @@ end
 
 
 EVAL_f = Evaluate(YTest,Y_f);
-%%
+%% Confusion Matrix for Fisher Test
+C_f = confusionmat(YTest,Y_f)
+
+
+figure
+imagesc(C_f)
+title('Fisher Confusion Matrix')
+colorbar
+%% Confusion Matrix for KNN
+C_knn = confusionmat(YTest,Y_c);
+
+figure
+imagesc(C_knn)
+title('KNN Confusion Matrix')
+colorbar
+
+
+
 
 

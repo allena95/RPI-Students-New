@@ -107,6 +107,37 @@ classifier(features,labels,.75);
 
 %Train error 17.95%, Test error 15.75%
 %Leave error for both train and test < 40%
+%%
+
+s=std(features);
+a = diag(1./s);
+[m,n] = size(features);
+one_m = ones(m,m);
+
+features = (features - (1/m)*(ones(m,m)*features))*a;
+
+
+
+
+nC = 4;
+
+% Do k-means with 10 restarts. 
+opts = statset('Display','final');
+[cidx, ctrs, SUMD, D]= kmeans(features, nC,'Replicates',10,'Options',opts);
+
+% K=means objective
+objective = sum(SUMD);
+
+[eigenvectors, scores, eigenvalues] = pca(features);
+explainedVar = cumsum(eigenvalues./sum(eigenvalues) * 100);
+figure
+bar(explainedVar)
+
+%%
+figure
+imagesc(ctrs)
+title('Cluster Centers')
+colorbar
 
 %% Confusion Matrix for sig S15 prediction
 Y_f4 = nan(size(Test4,1),1);

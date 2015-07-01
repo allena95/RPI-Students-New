@@ -48,7 +48,7 @@ p=randperm(s,r);
 features=features(p,:);
 Y=s15(p);
 %Use trainpct percent of the data for training and the rest for testing.
-trainpct=.65;
+trainpct=.75;
 train_size=ceil(r*trainpct);
 
 % Grab training and test data
@@ -117,6 +117,8 @@ for i = 1:size(Y_t,1);
         perror = perror +1;
     end
 end
+%%
+C = confusionmat(Y_t,Y_c) %confusion matrix
 
 %{
 [CX,CY,T,AUC] = perfcurve(Y_t,score(:,1),posclass);

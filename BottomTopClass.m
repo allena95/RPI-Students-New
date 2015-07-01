@@ -136,7 +136,7 @@ error_percent = total_error/size(Test,1) % Total error of classifier
 %%
 Train = [Classp_train;Classm_train];
 
-nC = 4;
+nC = 2;
 
 % Do k-means with 10 restarts. 
 opts = statset('Display','final');

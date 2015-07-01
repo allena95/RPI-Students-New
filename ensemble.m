@@ -95,18 +95,20 @@ for i = 1:size(Y_t,1);
         perror = perror +1;
     end
 end
+
+C = confusionmat(Y_t,Y_c) %confusion matrix
 %% Trying Built in knnclassify
-Class = knnclassify(Test(:,1:end-1),Train(:,1:end-1),Train(:,end)); 
-perror = 0;
-merror = 0;
-for i = 1:size(Y_t,1);
-    if and(Y_t(i)~=Class(i),Y_t(i)==0);
-        merror = merror +1;
-    end
-    if and(Y_t(i)==1,Y_t(i)~=Class(i));
-        perror = perror +1;
-    end
-end
+% Class = knnclassify(Test(:,1:end-1),Train(:,1:end-1),Train(:,end)); 
+% perror = 0;
+% merror = 0;
+% for i = 1:size(Y_t,1);
+%     if and(Y_t(i)~=Class(i),Y_t(i)==0);
+%         merror = merror +1;
+%     end
+%     if and(Y_t(i)==1,Y_t(i)~=Class(i));
+%         perror = perror +1;
+%     end
+% end
 
 
 

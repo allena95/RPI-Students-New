@@ -27,12 +27,12 @@ s15 = want(:,end); %return labels s15
 
 %% Mean center and scale
 
-% s=std(features);
-% a = diag(1./s);
-% [m,n] = size(features);
-% one_m = ones(m,m);
-% 
-% features = (features - (1/m)*(ones(m,m)*features))*a; 
+s=std(features);
+a = diag(1./s);
+[m,n] = size(features);
+one_m = ones(m,m);
+
+features = (features - (1/m)*(ones(m,m)*features))*a; 
 
 %% Define testing and training sets
 
@@ -119,19 +119,20 @@ HistClass(Classp_test,Classm_test,wfisher,tfisher,...
     'Fisher Method Testing Results',FisherTestError);
 %%
 Train = [Classp_train;Classm_train];
-
+%Train = [Train sort(YTrain,'descend')];
 Test = [Classp_test;Classm_test];
-
+%%
+want = [features s15];
 nC = 4;
 
 % Do k-means with 10 restarts. 
 opts = statset('Display','final');
-[cidx, ctrs, SUMD, D]= kmeans(Train, nC,'Replicates',10,'Options',opts);
+[cidx, ctrs, SUMD, D]= kmeans(want, nC,'Replicates',10,'Options',opts);
 
 % K=means objective
 objective = sum(SUMD);
 
-[eigenvectors, scores, eigenvalues] = pca(Train);
+[eigenvectors, scores, eigenvalues] = pca(want);
 explainedVar = cumsum(eigenvalues./sum(eigenvalues) * 100);
 figure
 bar(explainedVar)
@@ -158,7 +159,7 @@ bar(explainedVar)
 
 
 %%
-[eigenvectors,zscores,eigenvalues] = pca(Train);
+[eigenvectors,zscores,eigenvalues] = pca(want);
 
 figure
 gscatter(zscores(:,1),zscores(:,2),cidx);
@@ -263,15 +264,15 @@ imagesc(ctrs)
 title('Cluster Centers')
 colorbar
 
-figure
-imagesc(ctrsTest)
-title('CtrsTest')
-colorbar
-
-figure
-imagesc(ctrsFull)
-title('CtrsFull')
-colorbar
+% figure
+% imagesc(ctrsTest)
+% title('CtrsTest')
+% colorbar
+% 
+% figure
+% imagesc(ctrsFull)
+% title('CtrsFull')
+% colorbar
 
 
 
@@ -325,6 +326,23 @@ end
 
 
 EVAL_f = Evaluate(YTest,Y_f);
-%%
+%% Confusion Matrix for Fisher Test
+C_f = confusionmat(YTest,Y_f)
+
+
+figure
+imagesc(C_f)
+title('Fisher Confusion Matrix')
+colorbar
+%% Confusion Matrix for KNN
+C_knn = confusionmat(YTest,Y_c);
+
+figure
+imagesc(C_knn)
+title('KNN Confusion Matrix')
+colorbar
+
+
+
 
 
